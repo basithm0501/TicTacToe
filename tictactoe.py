@@ -271,15 +271,30 @@ def computer_turn():
     # Checks player win to quit game loop
     if board.check_win(X):
         return X
+    
+    # Get best computer using minimax input
+    # Checks if board empty
     if ai:
-        # Get best computer using minimax input
-        play_best_move(board)
+        empty = True
+        for i in range(3):
+            for j in range(3):
+                if not board.state[i][j] == "":
+                    empty = False
+                    break
+        if not empty:
+            play_best_move(board)
+        else:
+            time.sleep(1)
+            board.place(0, 0, O)
+            render_O((0,0))
+        return None
     else:
         while True:
             x = random.randint(0,2)
             y = random.randint(0,2)
             if board.state[x][y] == "":
                 board.place(x, y, O)
+                render_O((x,y))
                 return None
     
 
@@ -332,14 +347,14 @@ def player(s):
             return MAX
         else:
             raise ValueError("Incorrect number of Xs or Os")
-    else:
+    elif startingPlayer == 1:
         if countX == countO:
             return MAX
         elif countO == countX+1:
             return MIN
         else:
             raise ValueError("Incorrect number of Xs or Os")
-
+    else: raise ValueError("Trying to check whose turn with no startingPlayer")
         
 
 def isterminal(s):
